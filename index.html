@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>CyberGhost Labs - Vulnerable Website</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background: #1e1e1e; color: #ddd; }
+        nav { margin-bottom: 20px; }
+        nav a { margin-right: 15px; color: #6af; text-decoration: none; }
+        nav a:hover { text-decoration: underline; }
+        form { margin-bottom: 30px; background: #2c2c2c; padding: 15px; border-radius: 5px; }
+        input, textarea { width: 100%; margin-top: 8px; padding: 8px; background: #444; border: none; color: #eee; }
+        button { margin-top: 10px; padding: 10px 15px; background: #6af; border: none; color: #111; cursor: pointer; }
+        button:hover { background: #49a; }
+        .error { color: #f66; }
+        .comment { background: #333; padding: 10px; border-radius: 4px; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="#login">Login</a>
+        <a href="#register">Register</a>
+        <a href="#search">Search</a>
+        <a href="#profile">Profile Update</a>
+        <a href="#comments">Comments</a>
+        <a href="#upload">File Upload</a>
+        <a href="#admin">Admin Panel</a>
+    </nav>
+
+    <h1>Welcome to CyberGhost Labs</h1>
+    <p>This site is intentionally vulnerable for educational purposes.</p>
+
+    <!-- LOGIN FORM (SQL Injection Vulnerable) -->
+    <section id="login">
+        <h2>Login</h2>
+        <form method="GET" action="/login">
+            <label>Username:</label>
+            <input type="text" name="username" placeholder="Enter username" />
+            <label>Password:</label>
+            <input type="password" name="password" placeholder="Enter password" />
+            <button type="submit">Login</button>
+        </form>
+        <p><em>Vulnerability:</em> No input sanitization, vulnerable to <strong>SQL Injection</strong>.</p>
+    </section>
+
+    <!-- REGISTER FORM (Weak Validation) -->
+    <section id="register">
+        <h2>Register</h2>
+        <form method="POST" action="/register">
+            <label>Username:</label>
+            <input type="text" name="username" placeholder="Choose username" />
+            <label>Email:</label>
+            <input type="email" name="email" placeholder="Enter email" />
+            <label>Password:</label>
+            <input type="password" name="password" placeholder="Create password" />
+            <button type="submit">Register</button>
+        </form>
+        <p><em>Vulnerability:</em> No strong password checks or input validation.</p>
+    </section>
+
+    <!-- SEARCH BAR (Reflected XSS Vulnerable) -->
+    <section id="search">
+        <h2>Search</h2>
+        <form method="GET" action="/search">
+            <label>Search Term:</label>
+            <input type="text" name="q" placeholder="Search..." />
+            <button type="submit">Search</button>
+        </form>
+        <p><em>Vulnerability:</em> Output is reflected directly without sanitization — vulnerable to <strong>XSS</strong>.</p>
+    </section>
+
+    <!-- PROFILE UPDATE FORM (CSRF Vulnerable) -->
+    <section id="profile">
+        <h2>Update Profile</h2>
+        <form method="POST" action="/update-profile">
+            <label>Full Name:</label>
+            <input type="text" name="fullname" placeholder="Your full name" />
+            <label>Bio:</label>
+            <textarea name="bio" rows="3" placeholder="Write something about yourself..."></textarea>
+            <button type="submit">Update Profile</button>
+        </form>
+        <p><em>Vulnerability:</em> No CSRF tokens, vulnerable to <strong>CSRF</strong> attacks.</p>
+    </section>
+
+    <!-- COMMENTS SECTION (Stored XSS Vulnerable) -->
+    <section id="comments">
+        <h2>Comments</h2>
+        <form method="POST" action="/add-comment">
+            <label>Leave a comment:</label>
+            <textarea name="comment" rows="4" placeholder="Write your comment here"></textarea>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="comment-list">
+            <!-- Imagine these comments come from a database and are not sanitized -->
+            <div class="comment">User1: Great site! &lt;script&gt;alert('XSS Attack')&lt;/script&gt;</div>
+        </div>
+        <p><em>Vulnerability:</em> Stored XSS via unsanitized comments.</p>
+    </section>
+
+    <!-- FILE UPLOAD (Unrestricted File Upload Vulnerable) -->
+    <section id="upload">
+        <h2>File Upload</h2>
+        <form method="POST" action="/upload" enctype="multipart/form-data">
+            <input type="file" name="uploadfile" />
+            <button type="submit">Upload</button>
+        </form>
+        <p><em>Vulnerability:</em> No checks on file type or size, vulnerable to <strong>File Upload Attacks</strong>.</p>
+    </section>
+
+    <!-- ADMIN PANEL (Broken Authentication) -->
+    <section id="admin">
+        <h2>Admin Panel</h2>
+        <p>Enter admin secret key:</p>
+        <form method="GET" action="/admin">
+            <input type="text" name="secretkey" placeholder="Secret key" />
+            <button type="submit">Access</button>
+        </form>
+        <p><em>Vulnerability:</em> Authentication based on client-side secret key parameter — easily bypassed.</p>
+    </section>
+</body>
+</html>
